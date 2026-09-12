@@ -1,0 +1,8 @@
+const features = [
+  {title:'Egyptian food',text:'Egyptian cuisine reflects centuries of local agriculture and regional exchange. Dishes built around beans, grains, vegetables and bread remain part of everyday food culture.',image:'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1400&q=80'},
+  {title:'Music and everyday life',text:'Music is woven into celebrations, family gatherings and public life, from traditional forms to contemporary Egyptian pop and independent scenes.',image:'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=1400&q=80'},
+  {title:'Cairo and street culture',text:'Cairo’s neighborhoods combine historic architecture, markets, cafés and modern creative communities, producing a distinctive urban culture that keeps evolving.',image:'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=1400&q=80'},
+  {title:'Craft and design',text:'Textiles, ceramics, metalwork and other crafts carry techniques and visual traditions across generations while contemporary designers reinterpret them for new audiences.',image:'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&w=1400&q=80'}
+];
+
+export default function CulturePage(){return <div className="page"><header className="page-header"><p className="eyebrow">CULTURE</p><h1>The culture behind the numbers.</h1><p>Visual, accessible stories about food, music, cities, art and everyday life across Egypt.</p></header><div className="culture-grid">{features.map(f=><article className="culture-card" key={f.title}><img src={f.image} alt=""/><div><span className="eyebrow">CULTURE</span><h2>{f.title}</h2><p>{f.text}</p></div></article>)}</div></div>}
