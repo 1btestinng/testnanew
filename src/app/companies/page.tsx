@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function Companies(){return <div className="page"><header className="page-header"><p className="eyebrow">COMPANIES</p><h1>Company intelligence</h1><p>Search a market first to resolve companies through the configured provider.</p></header><div className="empty-state"><strong>Use Markets to search companies</strong><p>Provider-backed search avoids creating a fictional company universe.</p><Link className="primary-button" href="/markets">Browse markets</Link></div></div>}
