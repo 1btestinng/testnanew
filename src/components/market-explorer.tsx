@@ -1,0 +1,11 @@
+'use client';
+import { useState } from 'react';
+import Link from 'next/link';
+import type { MarketConfig } from '@/lib/markets';
+import type { MarketCompany } from '@/lib/types';
+
+export function MarketExplorer({ market }: { market: MarketConfig }) {
+  const [query,setQuery]=useState(''); const [loading,setLoading]=useState(false); const [results,setResults]=useState<MarketCompany[]>([]); const [error,setError]=useState('');
+  async function search() { if (!query.trim()) return; setLoading(true); setError(''); try { const r=await fetch(`/api/markets/${market.country}/companies?q=${encodeURIComponent(query)}`); const data=await r.json(); if(!r.ok) throw new Error(data.error || 'Search failed'); setResults(data.companies ?? []); } catch(e){setError(e instanceof Error?e.message:'Search unavailable');setResults([]);} finally{setLoading(false);} }
+  return <div className="page"><header className="page-header"><div className="breadcrumb"><Link href="/markets">Markets</Link><span>/</span>{market.countryName}</div><div className="market-title"><div><p className="eyebrow">{market.exchangeCode} · {market.currency}</p><h1>{market.countryName}</h1><p>{market.exchangeName} · {market.timezone}</p></div><span className="status-pill">Provider-backed</span></div></header><section className="toolbar"><input value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>e.key==='Enter'&&search()} placeholder="Search company or ticker…" aria-label="Search company or ticker"/><button onClick={search} disabled={loading}>{loading?'Searching…':'Search'}</button></section>{error&&<div className="state error-state">{error}</div>}{!error&&results.length===0&&!loading&&<div className="empty-state"><strong>Search the available company universe</strong><p>Results come from the configured market-data provider. No placeholder companies are shown.</p></div>}<div className="company-results">{results.map(c=><Link className="company-row" href={`/company/${market.country}/${encodeURIComponent(c.ticker)}`} key={c.ticker}><span className="ticker">{c.ticker}</span><span><strong>{c.name}</strong><small>{c.exchange}</small></span><span className="data-status">{c.dataStatus}</span><span>→</span></Link>)}</div></div>;
+}
