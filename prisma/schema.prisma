@@ -1,0 +1,13 @@
+generator client { provider = "prisma-client-js" }
+
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+
+model Country { id String @id @default(cuid()); code String @unique; name String; currency String; currencySymbol String; timezone String; markets Market[]; companies Company[] }
+model Market { id String @id @default(cuid()); code String @unique; name String; countryId String; currency String; timezone String; open String; close String; country Country @relation(fields:[countryId], references:[id]); listings Listing[] }
+model Company { id String @id @default(cuid()); name String; slug String @unique; countryId String; sector String?; logoUrl String?; country Country @relation(fields:[countryId], references:[id]); listings Listing[]; createdAt DateTime @default(now()); updatedAt DateTime @updatedAt }
+model Listing { id String @id @default(cuid()); companyId String; marketId String; ticker String; providerTicker String?; exchangeCode String; company Company @relation(fields:[companyId], references:[id]); market Market @relation(fields:[marketId], references:[id]); @@unique([marketId,ticker]) }
+model Quote { id String @id @default(cuid()); listingId String; price Decimal?; currency String; previousClose Decimal?; open Decimal?; high Decimal?; low Decimal?; volume BigInt?; observedAt DateTime?; retrievedAt DateTime @default(now()); provider String; status String; listing Listing @relation(fields:[listingId], references:[id]); @@index([listingId,observedAt]) }
+model HistoricalPrice { id String @id @default(cuid()); listingId String; date DateTime; close Decimal?; currency String; provider String; status String; listing Listing @relation(fields:[listingId], references:[id]); @@unique([listingId,date]) }
+model FxRate { id String @id @default(cuid()); symbol String; date DateTime; localPerUsd Decimal?; provider String; status String; @@unique([symbol,date]) }
+model FinancialStatement { id String @id @default(cuid()); companyId String; periodEnd DateTime; periodType String; statementType String; currency String; payload Json; provider String; status String; company Company @relation(fields:[companyId], references:[id]); @@index([companyId,statementType,periodEnd]) }
+model DataRefresh { id String @id @default(cuid()); provider String; scope String; startedAt DateTime @default(now()); finishedAt DateTime?; status String; message String? }
